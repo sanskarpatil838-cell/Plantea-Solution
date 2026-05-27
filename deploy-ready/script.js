@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   document.documentElement.classList.add("js");
 
   const body = document.body;
@@ -21,7 +21,7 @@
     "Red Chilli Kick",
     "Sweet & Tangy",
     "Tomato Rich",
-    "Dehydrated Raw Banana Powder",
+    "Dehydrated Green Banana Powder",
     "Blend Mattha Masala Powder",
     "Customised Blend"
   ];
