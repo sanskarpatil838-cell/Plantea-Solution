@@ -109,33 +109,28 @@ textarea {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 0;
   font-weight: 800;
   color: var(--green-950);
   letter-spacing: 0;
 }
 
 .brand-mark {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  color: var(--cream-50);
-  background:
-    linear-gradient(135deg, rgba(201, 164, 78, 0.95), rgba(47, 104, 71, 0.92)),
-    var(--green-800);
-  box-shadow: 0 16px 32px rgba(47, 104, 71, 0.28);
+  width: clamp(168px, 18vw, 224px);
+  height: 64px;
+  display: block;
+  border-radius: 6px;
+  background: #fff url("assets/plantea-logo.svg") center / contain no-repeat;
+  box-shadow: 0 12px 28px rgba(47, 104, 71, 0.1);
+  flex: 0 0 auto;
 }
 
 .brand-mark svg {
-  width: 25px;
-  height: 25px;
+  display: none;
 }
 
 .brand-text {
-  display: grid;
-  line-height: 1.1;
+  display: none;
 }
 
 .brand-text span {
@@ -1242,6 +1237,24 @@ textarea {
 .fact strong {
   color: var(--green-950);
   text-align: right;
+}
+
+.who-card {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.who-card h2 {
+  max-width: 760px;
+}
+
+.who-card p:not(.eyebrow) {
+  max-width: 980px;
+  margin: 0;
+  color: var(--charcoal-700);
 }
 
 .contact-grid {
