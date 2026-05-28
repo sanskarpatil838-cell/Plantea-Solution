@@ -1,0 +1,24 @@
+https://www.planteasolution.com/* https://planteasolution.com/:splat 301!
+http://planteasolution.com/* https://planteasolution.com/:splat 301!
+http://www.planteasolution.com/* https://planteasolution.com/:splat 301!
+
+https://www.plantea-solution.in/* https://planteasolution.com/:splat 301!
+https://plantea-solution.in/* https://planteasolution.com/:splat 301!
+
+/products.htm /products.html 301
+/about-us.htm /about.html 301
+/contact-us.htm /contact.html 301
+/dehydrated-beetroot-powder.htm /beetroot-powder.html 301
+/dehydrated-garlic-powder.htm /garlic-powder.html 301
+/dehydrated-tomato-powder.htm /dehydrated-tomato-powder.html 301
+/dehydrated-white-onion-powder.htm /white-onion-powder.html 301
+/dehydrated-mint-powder.htm /mint-powder.html 301
+/dehydrated-moringa-powder.htm /moringa-powder.html 301
+/dehydrated-neem-powder.htm /neem-leaf-powder.html 301
+/onion-garlic-umami-powder.htm /onion-garlic-umami-powder.html 301
+/mint-powder.htm /pudina-fresh.html 301
+/red-chilli-kick.htm /red-chilli-kick.html 301
+/sweet-tangy-dried-powder.htm /sweet-tangy.html 301
+/tomato-rich-powder.htm /tomato-rich.html 301
+/dehydrated-raw-banana-powder.htm /green-banana-powder.html 301
+/blend-mattha-masala-powder.htm /mattha-masala-premix.html 301

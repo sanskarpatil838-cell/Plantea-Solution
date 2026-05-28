@@ -1,258 +1,315 @@
-/* ==========================================================================
-   Plantea Solution - Premium B2B Script File
-   ========================================================================== */
+(function () {
+  document.documentElement.classList.add("js");
 
-document.addEventListener('DOMContentLoaded', () => {
-  initNavigation();
-  initMobileMenu();
-  init3DTilt();
-  initScrollReveal();
-  initFaqAccordion();
-  initCategoryFilter();
-  initContactPrefill();
-  initDynamicWhatsAppLinks();
-});
+  const body = document.body;
+  const menuToggle = document.querySelector(".menu-toggle");
+  const navDrawer = document.querySelector(".nav-drawer");
+  const backToTop = document.querySelector(".back-to-top");
+  const whatsappNumber = "919834521438";
+  const websiteUrl = "https://planteasolution.com";
+  const logoHref = "assets/plantea-logo.svg?v=20260527";
 
-/* ==========================================================================
-   Navigation Behavior (Sticky Navbar)
-   ========================================================================== */
-function initNavigation() {
-  const navbar = document.querySelector('.navbar');
-  if (!navbar) return;
+  document.querySelectorAll("link[rel='icon'], link[rel='shortcut icon']").forEach((link) => link.remove());
+  const favicon = document.createElement("link");
+  favicon.rel = "icon";
+  favicon.type = "image/svg+xml";
+  favicon.href = logoHref;
+  document.head.appendChild(favicon);
 
-  const handleScroll = () => {
-    if (window.scrollY > 50) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
-  };
+  const shortcutIcon = document.createElement("link");
+  shortcutIcon.rel = "shortcut icon";
+  shortcutIcon.type = "image/svg+xml";
+  shortcutIcon.href = logoHref;
+  document.head.appendChild(shortcutIcon);
 
-  window.addEventListener('scroll', handleScroll);
-  handleScroll(); // Check on load
-}
+  const productOptions = [
+    "Dehydrated Beetroot Powder",
+    "dehydrated garlic powder",
+    "Dehydrated Tomato Powder",
+    "Dehydrated White Onion Powder",
+    "Dehydrated Mint Powder",
+    "Dehydrated Moringa Powder",
+    "Dehydrated Neem Powder",
+    "Onion Garlic Umami",
+    "Pudina Fresh",
+    "Red Chilli Kick",
+    "Sweet & Tangy",
+    "Tomato Rich",
+    "Dehydrated Green Banana Powder",
+    "Blend Mattha Masala Powder",
+    "Customised Blend"
+  ];
 
-/* ==========================================================================
-   Mobile Hamburger Drawer
-   ========================================================================== */
-function initMobileMenu() {
-  const hamburger = document.querySelector('.hamburger');
-  const navMenu = document.querySelector('.nav-menu');
-  const navLinks = document.querySelectorAll('.nav-link');
+  if (menuToggle && navDrawer) {
+    menuToggle.addEventListener("click", () => {
+      const isOpen = body.classList.toggle("nav-open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+    });
 
-  if (!hamburger || !navMenu) return;
+    navDrawer.addEventListener("click", (event) => {
+      if (event.target.closest("a")) {
+        body.classList.remove("nav-open");
+        menuToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
 
-  const toggleMenu = () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-  };
-
-  hamburger.addEventListener('click', toggleMenu);
-
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      navMenu.classList.remove('active');
+  document.querySelectorAll('a[href^="#"], a[href*=".html#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const href = link.getAttribute("href");
+      if (!href || !href.includes("#")) return;
+      const [page, hash] = href.split("#");
+      const currentPage = window.location.pathname.split("/").pop() || "index.html";
+      if (page && page !== currentPage && !(page === "index.html" && currentPage === "")) return;
+      const target = document.getElementById(hash);
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.pushState(null, "", `#${hash}`);
     });
   });
-}
 
-/* ==========================================================================
-   3D Tilt Card Effect
-   ========================================================================== */
-function init3DTilt() {
-  const cards = document.querySelectorAll('.card-3d');
-  
-  cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left; // x position within element
-      const y = e.clientY - rect.top;  // y position within element
-      
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      // Calculate rotation angles (max 15 degrees)
-      const rotateX = ((centerY - y) / centerY) * 15;
-      const rotateY = ((x - centerX) / centerX) * 15;
-      
-      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-      
-      // Move inner contents slightly more for parallax depth
-      const inner = card.querySelector('.card-3d-inner');
-      if (inner) {
-        inner.style.transform = `translateZ(40px) scale(0.95)`;
-      }
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-      card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-      
-      const inner = card.querySelector('.card-3d-inner');
-      if (inner) {
-        inner.style.transform = 'translateZ(0px)';
-        inner.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-      }
-    });
-    
-    card.addEventListener('mouseenter', () => {
-      card.style.transition = 'transform 0.1s ease';
-      const inner = card.querySelector('.card-3d-inner');
-      if (inner) {
-        inner.style.transition = 'transform 0.1s ease';
-      }
-    });
-  });
-}
-
-/* ==========================================================================
-   Scroll Reveal Animation (IntersectionObserver)
-   ========================================================================== */
-function initScrollReveal() {
-  const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-  
-  if ('IntersectionObserver' in window) {
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.15
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
+  const revealElements = document.querySelectorAll("[data-reveal]");
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          observer.unobserve(entry.target); // Reveal only once
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
         }
       });
-    }, observerOptions);
+    }, { threshold: 0.12 });
 
-    revealElements.forEach(el => observer.observe(el));
+    revealElements.forEach((element) => observer.observe(element));
+    window.setTimeout(() => {
+      revealElements.forEach((element) => element.classList.add("is-visible"));
+    }, 1400);
   } else {
-    // Fallback if IntersectionObserver is not supported
-    revealElements.forEach(el => el.classList.add('active'));
+    revealElements.forEach((element) => element.classList.add("is-visible"));
   }
-}
 
-/* ==========================================================================
-   FAQ Accordion
-   ========================================================================== */
-function initFaqAccordion() {
-  const faqQuestions = document.querySelectorAll('.faq-question');
-  
-  faqQuestions.forEach(q => {
-    q.addEventListener('click', () => {
-      const item = q.parentElement;
-      const isActive = item.classList.contains('active');
-      
-      // Close all items
-      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
-      
-      // Toggle current item
-      if (!isActive) {
-        item.classList.add('active');
-      }
+  document.querySelectorAll("[data-tilt]").forEach((card) => {
+    card.addEventListener("pointermove", (event) => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const rotateY = ((x / rect.width) - 0.5) * 10;
+      const rotateX = ((0.5 - y / rect.height) * 10);
+      card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+    });
+
+    card.addEventListener("pointerleave", () => {
+      card.style.transform = "";
     });
   });
-}
 
-/* ==========================================================================
-   Category Product Filtering (products.html)
-   ========================================================================== */
-function initCategoryFilter() {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const productCards = document.querySelectorAll('.grid-3 .product-card');
-  const categorySections = document.querySelectorAll('.products-category-section');
+  const filterButtons = document.querySelectorAll("[data-filter]");
+  const productCards = document.querySelectorAll("[data-category]");
+  const categorySections = document.querySelectorAll("[data-category-section]");
 
-  if (filterBtns.length === 0) return;
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.filter;
+      filterButtons.forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // Remove active class from buttons
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      productCards.forEach((card) => {
+        const shouldShow = filter === "all" || card.dataset.category === filter;
+        card.classList.toggle("hide", !shouldShow);
+      });
 
-      const filterValue = btn.getAttribute('data-filter');
-
-      if (filterValue === 'all') {
-        // Show all category sections and cards
-        categorySections.forEach(section => {
-          section.style.display = 'block';
-        });
-        productCards.forEach(card => {
-          card.style.display = 'flex';
-        });
-      } else {
-        // Show only the section that matches the category
-        categorySections.forEach(section => {
-          const category = section.getAttribute('data-category');
-          if (category === filterValue) {
-            section.style.display = 'block';
-          } else {
-            section.style.display = 'none';
-          }
-        });
-      }
+      categorySections.forEach((section) => {
+        const shouldShow = filter === "all" || section.dataset.categorySection === filter;
+        section.classList.toggle("hide", !shouldShow);
+      });
     });
   });
-}
 
-/* ==========================================================================
-   Contact Form Prefill / Dynamic Query Routing
-   ========================================================================== */
-function initContactPrefill() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const productParam = urlParams.get('product');
-  const enquiryForm = document.getElementById('enquiry-form');
-  
-  if (!productParam) return;
+  const params = new URLSearchParams(window.location.search);
+  const productFromUrl = params.get("product");
+  const productFromPage = document.querySelector("[data-current-product]")?.dataset.currentProduct;
+  const productInterest = productFromUrl || productFromPage || "";
 
-  const productDropdown = document.getElementById('product-interest');
-  if (productDropdown) {
-    // Attempt exact match
-    for (let i = 0; i < productDropdown.options.length; i++) {
-      if (productDropdown.options[i].value.toLowerCase() === productParam.toLowerCase()) {
-        productDropdown.selectedIndex = i;
-        break;
+  document.querySelectorAll("select[name='product']").forEach((select) => {
+    const existing = Array.from(select.options).map((option) => option.value);
+    productOptions.forEach((product) => {
+      if (!existing.includes(product)) {
+        const option = document.createElement("option");
+        option.value = product;
+        option.textContent = product;
+        select.appendChild(option);
       }
+    });
+    if (productInterest) {
+      select.value = productInterest;
+    }
+  });
+
+  document.querySelectorAll("textarea[name='message']").forEach((textarea) => {
+    if (productInterest && !textarea.value.trim()) {
+      textarea.value = `Please share bulk order details, pricing, packaging options and sample availability for ${productInterest}.`;
+    }
+  });
+
+  const getFormWhatsAppDetails = (link) => {
+    const form = link.closest("form");
+    if (!form) return {};
+    const formData = new FormData(form);
+    return {
+      name: formData.get("name"),
+      company: formData.get("company"),
+      phone: formData.get("phone"),
+      product: formData.get("product"),
+      quantity: formData.get("quantity"),
+      message: formData.get("message")
+    };
+  };
+
+  const buildWhatsAppMessage = (product, details = {}) => {
+    const selectedProduct = details.product || product || productInterest || "Plantea Solution products";
+    const lines = [
+      `Hello! I found your website ${websiteUrl} and am interested in your products.`,
+      "",
+      `Product: ${selectedProduct}`
+    ];
+
+    if (details.quantity) lines.push(`Quantity requirement: ${details.quantity}`);
+    if (details.name) lines.push(`Name: ${details.name}`);
+    if (details.company) lines.push(`Company: ${details.company}`);
+    if (details.phone) lines.push(`Phone: ${details.phone}`);
+    if (details.message && !String(details.message).startsWith("Please share bulk order details")) {
+      lines.push("", `Message: ${details.message}`);
+    }
+
+    lines.push("", "Please share price, MOQ, packaging options and sample availability.");
+    return lines.join("\n");
+  };
+
+  const buildWhatsAppUrl = (product, details = {}, configuredNumber = "") => {
+    const number = String(configuredNumber || whatsappNumber).replace(/\D/g, "");
+    return `https://wa.me/${number}?text=${encodeURIComponent(buildWhatsAppMessage(product, details))}`;
+  };
+
+  const updateWhatsAppLinks = () => {
+    document.querySelectorAll("[data-whatsapp]").forEach((link) => {
+      const product = link.dataset.product || productInterest || "Plantea Solution products";
+      link.href = buildWhatsAppUrl(product, getFormWhatsAppDetails(link), link.dataset.whatsappNumber);
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.setAttribute("aria-label", `Send WhatsApp enquiry to Plantea Solution at +91 98345 21438 for ${product}`);
+      link.addEventListener("click", () => {
+        link.href = buildWhatsAppUrl(link.dataset.product || productInterest || "Plantea Solution products", getFormWhatsAppDetails(link), link.dataset.whatsappNumber);
+      });
+    });
+  };
+  updateWhatsAppLinks();
+
+  if (!document.querySelector(".whatsapp-float")) {
+    const floatLink = document.createElement("a");
+    floatLink.className = "whatsapp-float";
+    floatLink.href = buildWhatsAppUrl(productInterest || "Plantea Solution products");
+    floatLink.dataset.whatsapp = "";
+    floatLink.dataset.product = productInterest || "Plantea Solution products";
+    floatLink.target = "_blank";
+    floatLink.rel = "noopener";
+    floatLink.setAttribute("aria-label", "WhatsApp Plantea Solution at +91 98345 21438");
+    floatLink.innerHTML = '<span class="whatsapp-icon" aria-hidden="true"><svg viewBox="0 0 32 32" role="img" focusable="false"><path d="M16.02 4.1A11.72 11.72 0 0 0 5.9 21.74L4.4 27.6l5.98-1.42A11.72 11.72 0 1 0 16.02 4.1Zm0 2.14a9.58 9.58 0 1 1-4.88 17.82l-.39-.23-3.35.8.84-3.26-.25-.41a9.57 9.57 0 0 1 8.03-14.72Zm-4.1 4.74c-.22-.5-.46-.51-.68-.52h-.58c-.2 0-.52.08-.79.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.07 3.31 5.08 4.51 2.51 1 3.02.8 3.56.75.55-.05 1.77-.72 2.02-1.42.25-.7.25-1.3.18-1.42-.07-.13-.27-.2-.57-.35-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.48-1.75-1.65-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.66-1.63-.94-2.22Z" fill="currentColor"/></svg></span><span>WhatsApp Us</span>';
+    document.body.appendChild(floatLink);
+  }
+
+  if (!document.querySelector(".linkedin-float")) {
+    const linkedinLink = document.createElement("a");
+    linkedinLink.className = "linkedin-float";
+    linkedinLink.href = "https://www.linkedin.com/in/plantea-solution-5bb333363";
+    linkedinLink.target = "_blank";
+    linkedinLink.rel = "noopener";
+    linkedinLink.setAttribute("aria-label", "Open Plantea Solution on LinkedIn");
+    linkedinLink.innerHTML = '<span class="linkedin-icon" aria-hidden="true">in</span><span>LinkedIn</span>';
+    document.body.appendChild(linkedinLink);
+  }
+
+  document.querySelectorAll("[data-enquiry-product]").forEach((link) => {
+    link.addEventListener("click", () => {
+      sessionStorage.setItem("planteaProductInterest", link.dataset.enquiryProduct);
+    });
+  });
+
+  const storedProduct = sessionStorage.getItem("planteaProductInterest");
+  if (!productInterest && storedProduct && document.querySelector(".enquiry-form")) {
+    const select = document.querySelector("select[name='product']");
+    const textarea = document.querySelector("textarea[name='message']");
+    if (select) select.value = storedProduct;
+    if (textarea && !textarea.value.trim()) {
+      textarea.value = `Please share bulk order details, pricing, packaging options and sample availability for ${storedProduct}.`;
     }
   }
 
-  const messageTextarea = document.getElementById('message');
-  if (messageTextarea) {
-    // Generate polite preset message
-    const formattedProductName = productParam.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    messageTextarea.value = `Dear Plantea Solution, we are interested in receiving bulk pricing, availability, and sample options for ${formattedProductName}. Please share specification sheets and business terms.`;
-  }
-}
+  document.querySelectorAll(".enquiry-form").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      let valid = true;
+      form.querySelectorAll(".error-text").forEach((error) => error.textContent = "");
 
-/* ==========================================================================
-   Dynamic WhatsApp Links
-   ========================================================================== */
-function initDynamicWhatsAppLinks() {
-  const whatsappButtons = document.querySelectorAll('.whatsapp-btn');
-  const phoneNumber = '919834521438'; // Plantea Solution Official WhatsApp
+      const requiredFields = form.querySelectorAll("[required]");
+      requiredFields.forEach((field) => {
+        const error = form.querySelector(`[data-error-for="${field.name}"]`);
+        if (!field.value.trim()) {
+          valid = false;
+          if (error) error.textContent = "This field is required.";
+        }
+      });
 
-  whatsappButtons.forEach(btn => {
-    const productName = btn.getAttribute('data-product');
-    let message = "Hi Plantea Solution, I would like to make an enquiry regarding your products.";
+      const email = form.querySelector("input[type='email']");
+      if (email && email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        valid = false;
+        const error = form.querySelector(`[data-error-for="${email.name}"]`);
+        if (error) error.textContent = "Enter a valid email address.";
+      }
 
-    if (productName) {
-      message = `Hi Plantea Solution, I am interested in inquiring about bulk orders and product details for ${productName}. Could you please send me technical specification sheets and pricing details?`;
-    }
+      const phone = form.querySelector("input[name='phone']");
+      if (phone && phone.value.trim() && !/^[0-9+\-\s()]{7,18}$/.test(phone.value.trim())) {
+        valid = false;
+        const error = form.querySelector('[data-error-for="phone"]');
+        if (error) error.textContent = "Enter a valid phone number.";
+      }
 
-    const encodedMessage = encodeURIComponent(message);
-    btn.setAttribute('href', `https://wa.me/${phoneNumber}?text=${encodedMessage}`);
-    btn.setAttribute('target', '_blank');
-    btn.setAttribute('rel', 'noopener noreferrer');
+      const status = form.querySelector(".form-status");
+      if (!valid) {
+        if (status) status.textContent = "Please correct the highlighted fields.";
+        return;
+      }
+
+      const formData = new FormData(form);
+      const product = formData.get("product") || productInterest || "Bulk enquiry";
+      const subject = `Bulk enquiry - ${product}`;
+      const bodyLines = [
+        `Name: ${formData.get("name") || ""}`,
+        `Company: ${formData.get("company") || ""}`,
+        `Email: ${formData.get("email") || ""}`,
+        `Phone: ${formData.get("phone") || ""}`,
+        `Product: ${product}`,
+        `Quantity: ${formData.get("quantity") || ""}`,
+        "",
+        formData.get("message") || ""
+      ];
+      const mailto = `mailto:info@planteasolution.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+      if (status) status.textContent = "Enquiry is ready in your email app. You can review and send it.";
+      window.location.href = mailto;
+    });
   });
-}
 
-/* ==========================================================================
-   Enquiry Prefill Helper (B2B Redirection Utility)
-   ========================================================================== */
-// This can be called globally if inline onclicks are used, or dynamically
-window.redirectToEnquiry = function(productSlug) {
-  window.location.href = `contact.html?product=${productSlug}`;
-};
+  const syncBackButton = () => {
+    if (!backToTop) return;
+    backToTop.classList.toggle("visible", window.scrollY > 560);
+  };
+
+  window.addEventListener("scroll", syncBackButton, { passive: true });
+  syncBackButton();
+
+  if (backToTop) {
+    backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  }
+})();
+
+
