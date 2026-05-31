@@ -116,8 +116,8 @@ textarea {
 }
 
 .brand-mark {
-  width: clamp(168px, 18vw, 224px);
-  height: 64px;
+  width: clamp(260px, 22vw, 340px);
+  height: 78px;
   display: grid;
   place-items: center;
   border-radius: 6px;
@@ -125,6 +125,7 @@ textarea {
   box-shadow: 0 12px 28px rgba(47, 104, 71, 0.1);
   overflow: hidden;
   flex: 0 0 auto;
+  padding: 8px 14px;
 }
 
 .brand-logo {
@@ -132,7 +133,10 @@ textarea {
   height: 100%;
   display: block;
   object-fit: contain;
+  object-position: center;
 }
+
+
 
 .brand-text {
   display: none;
