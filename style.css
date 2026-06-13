@@ -117,7 +117,7 @@ textarea {
 
 .brand-mark {
   width: clamp(260px, 22vw, 340px);
-  height: 78px;
+  aspect-ratio: 370 / 151;
   display: grid;
   place-items: center;
   border-radius: 6px;
@@ -125,7 +125,6 @@ textarea {
   box-shadow: 0 12px 28px rgba(47, 104, 71, 0.1);
   overflow: hidden;
   flex: 0 0 auto;
-  padding: 8px 14px;
 }
 
 .brand-logo {
@@ -1770,6 +1769,10 @@ html.js [data-reveal].is-visible {
 @media (max-width: 719px) {
   .container {
     width: min(100% - 24px, var(--max-width));
+  }
+
+  .brand-mark {
+    width: min(220px, calc(100vw - 92px));
   }
 
   .section {
